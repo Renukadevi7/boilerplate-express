@@ -1,6 +1,7 @@
-let express = require('express');
+let express = require("express");
 let app = express();
-
+let logger =('/logger.js');
+require("dotenv").config();
 
 //console.log("Hello World");
 
@@ -9,38 +10,27 @@ let app = express();
 //   res.send('Hello Express');
 // });
 
-app.get('/', (req, res) => {
-
-  res.sendFile(__dirname + '/views/index.html');
+app.use("/public", express.static(__dirname + "/public"));
+app.use( (req, res, next ) =>{
+ console.log(req.method + " " + req.path + " " + req.ip);
+ next();
 });
-  module.exports = app;
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/views/index.html");
+});
+
+app.get("/json", (req, res) => {
+ 
+  let greeting = 'Hello json';
+
+  if (process.env.MESSAGE_STYLE === 'uppercase') {
+    greeting = greeting.toUpperCase();
+  }
+  res.json({ message : greeting });
+});
 
 
+module.exports = app;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- module.exports = app;
